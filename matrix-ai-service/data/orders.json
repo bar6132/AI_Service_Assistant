@@ -1,0 +1,44 @@
+[
+  {
+    "order_id": "ORD-1001",
+    "customer_id": "C-101",
+    "status": "processing",
+    "estimated_delivery": "2026-09-25",
+    "delivered_at": null
+  },
+  {
+    "order_id": "ORD-1002",
+    "customer_id": "C-101",
+    "status": "shipped",
+    "estimated_delivery": "2026-09-20",
+    "delivered_at": null
+  },
+  {
+    "order_id": "ORD-1003",
+    "customer_id": "C-101",
+    "status": "delivered",
+    "estimated_delivery": "2026-09-12",
+    "delivered_at": "2026-09-12"
+  },
+  {
+    "order_id": "ORD-1004",
+    "customer_id": "C-101",
+    "status": "delivered",
+    "estimated_delivery": "2026-09-01",
+    "delivered_at": "2026-09-01"
+  },
+  {
+    "order_id": "ORD-1005",
+    "customer_id": "C-202",
+    "status": "shipped",
+    "estimated_delivery": "2026-09-24",
+    "delivered_at": null
+  },
+  {
+    "order_id": "ORD-1006",
+    "customer_id": "C-101",
+    "status": "shipped",
+    "estimated_delivery": "2026-09-24",
+    "delivered_at": null
+  }
+]

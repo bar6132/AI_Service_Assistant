@@ -4,6 +4,10 @@
 
 מסמך התכנון המלא: [`Docs/AI_Service_Assistant_Design.md`](../Docs/AI_Service_Assistant_Design.md) — ארכיטקטורה, טבלת החלטות, פרומפטים, תוכנית בדיקות. מסמך המטלה המקורית (`Docs/AIEngineerTest.md`) אינו כלול במאגר הציבורי (ראו `.gitignore` בשורש) — זהו תוכן המטלה עצמו, לא תוצר של הפתרון.
 
+## הדגמה ויזואלית (Demo)
+
+[`progress/Demo/request-pipeline.html`](progress/Demo/request-pipeline.html) — עמוד HTML עצמאי (בלי צורך בשרת, מפתח API או התקנה) שמראה ויזואלית איך פנייה עוברת דרך כל קובץ במערכת: LLM #1 (חילוץ) → שליפת הזמנה → מנוע המדיניות → פתיחת בקשת שירות → LLM #2 (ניסוח) → Reply Guard → תשובה. כולל 4 תרחישים אמיתיים (מתוך `progress/10`) שאפשר לעבור ביניהם צעד-צעד, עם קוד ה-JSON האמיתי בכל שלב. פותחים ישירות בדפדפן (double-click על הקובץ, או `start progress/Demo/request-pipeline.html` ב-Windows).
+
 ## דרישות סביבה
 
 - Python 3.11+ (פותח ונבדק על 3.14)
@@ -39,7 +43,7 @@ cp .env.example .env
 
 ## הפעלה
 
-לדוגמאות מלאות עם פלט אמיתי מכל 10 מקרי הבדיקה (כולל שאלת הבהרה + הרצה חוזרת עם `--context`, תקלה מדומה, ובדיקת מסד הנתונים) — ראו [`progress/10-בדיקות-ותוצאות.md`](progress/10-בדיקות-ותוצאות.md) (עברית) / [`progress/en/10-tests-and-results.md`](progress/en/10-tests-and-results.md) (אנגלית). למטה רק תמצית:
+לדוגמאות מלאות עם פלט אמיתי מכל 10 מקרי הבדיקה (כולל שאלת הבהרה + הרצה חוזרת עם `--context`, תקלה מדומה, ובדיקת מסד הנתונים) — ראו [`progress/10-בדיקות-ותוצאות.md`](progress/10-בדיקות-ותוצאות.md) (עברית) / [`progress/en/10-tests-and-results.md`](progress/en/10-tests-and-results.md) (אנגלית). לתצוגה ויזואלית של אותה זרימה בלי להריץ כלום — [`progress/Demo/request-pipeline.html`](progress/Demo/request-pipeline.html). למטה רק תמצית פקודות:
 
 ```bash
 # בקשה בסיסית
@@ -82,6 +86,7 @@ run.py                              CLI
 tests/test_policy_engine.py         14 בדיקות יחידה על טבלת ההחלטות, בלי מודל
 progress/                           תיעוד שלב-אחר-שלב בעברית, כל החלטה מצוטטת מהמקור
 progress/en/                        אותו תיעוד באנגלית
+progress/Demo/request-pipeline.html דף HTML עצמאי — תצוגה ויזואלית של הזרימה, בלי הרצה
 ```
 
 ## תוצאות בדיקות

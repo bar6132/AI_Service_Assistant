@@ -30,3 +30,8 @@ Neither issue came from deviating from the design — they're my own implementat
 
 ## How this satisfies the requirement
 - Assignment, line 114: "Short run instructions and workspace requirements, without passwords and keys" — `.env.example` with no real values, `requirements.txt` to reproduce the environment.
+
+## Update — gap-closure round (part 13)
+
+- `.env.example`: `PROVIDERS=gemini` (tested), comments stating grok and local are supported but untested, and an explanation of `TODAY` — without it, the current date is used.
+- `requirements.txt`: added `tzdata` on Windows so `Asia/Jerusalem` works.

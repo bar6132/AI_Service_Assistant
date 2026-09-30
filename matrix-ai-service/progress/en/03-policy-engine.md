@@ -25,3 +25,9 @@ Reason: `decide()` receives a single `order` that has already been located and c
 ## How this satisfies the requirement
 - Assignment, line 82: "Using policy and order data to ground the result" — every `Decision` carries real `source_ids` from `policies.json`.
 - Assignment, lines 30–35 (POL-02 through POL-07): every policy clause is mapped to at least one code rule.
+
+## Update — gap-closure round (part 13)
+
+- A status other than processing / shipped / delivered (e.g. cancelled, returned) → `escalate` + `agent_handoff`, POL-07 — for every intent. Before, cancelling an already-cancelled order got "the order was already delivered" (wrong). Basis: POL-07 in the assignment ("if a decision not covered by the policy is needed, escalate to an agent", line 35) and design, line 272.
+- The cancel branch checks `delivered` explicitly; there is no more "everything else = delivered".
+- 24 new tests (4 statuses × 6 intents) in `tests/test_policy_engine.py`.

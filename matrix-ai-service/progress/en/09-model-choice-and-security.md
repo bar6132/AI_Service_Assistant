@@ -27,3 +27,7 @@ While filling in `.env`, the same key also got pasted into `.env.example`. `.env
 ## How this satisfies the requirement
 - Design, line 19: "Testers can run the solution with any of them [the providers]" — `.env` is currently set to `PROVIDERS=gemini` only, since that's the key available.
 - Assignment, line 9: "No need for... a paid service" — Flash-Lite with a free tier allows running every test case at no cost.
+
+## Update — gap-closure round (part 13)
+
+- `gemini` is now also the default `PROVIDERS` value, not only the default `GEMINI_MODEL`. The gap analysis pointed out that a reviewer following the README would have hit Grok first — an untested path. Grok remains supported in code.

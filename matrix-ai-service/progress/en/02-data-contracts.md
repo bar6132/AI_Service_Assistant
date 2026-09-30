@@ -18,3 +18,10 @@
 ## How this satisfies the requirement
 - Assignment, line 66: "The prototype will return JSON including at least..." — the schema guarantees the output always contains all required fields in the correct format.
 - Assignment, line 86: "Validating the structured output" — Pydantic validation (`ValidationError` on failure) is the validation mechanism itself; used in the failure-handling part (a later part).
+
+## Update — gap-closure round (part 13)
+
+- `Extraction.order_ids` is now normalized (`ord-1001` / `ORD 1001` → `ORD-1001`) and de-duplicated, instead of dropping anything that isn't an exact match.
+- `AgentInput.context` is structured: `intent:ORD-XXXX`, up to 40 characters — not a second free-text channel into the model (design, A8, line 76).
+- New `Order` model: an order record must have valid dates, and `delivered` requires a delivery date. An invalid record is stopped before the policy engine (design, line 272).
+- `Decision.action` and `service_request_type` are typed as `Literal`, like `AgentResponse`.

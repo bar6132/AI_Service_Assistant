@@ -30,3 +30,10 @@ The design **requires** 4–6 few-shot examples including an injection attempt (
 ## How this satisfies the requirement
 - Assignment, line 82: "Using an AI model via an API or a tool that allows calling the model" — ✅.
 - Assignment, line 87: "Handling at least one failure, e.g.... invalid model output" — ✅ `run_structured` handles this explicitly.
+
+## Update — gap-closure round (part 13)
+
+- The SDK's internal retries are off (`max_retries=0`). Before, each "attempt" in the log was really up to 3 HTTP calls.
+- The whole retry policy lives in the chain: at most 2 calls per provider — a repair attempt on a schema error, or one plain retry on a transient error (timeout, 429, 5xx); a permanent error (401/400) moves straight to the next provider (design, line 309). The re-run showed it live: two Gemini 503s were resolved on the second attempt.
+- The default `PROVIDERS` in code and in `.env.example` is `gemini` — the only provider that was tested. A provider without a key is skipped; an unknown provider name (e.g. `groq`) is a clear `ConfigError` at startup instead of a crash or a silent escalate.
+- Tested against a fake OpenAI-compatible server (`tests/test_llm.py`).

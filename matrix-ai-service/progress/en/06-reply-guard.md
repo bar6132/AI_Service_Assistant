@@ -22,3 +22,9 @@
 ## How this satisfies the requirement
 - Assignment, line 88 (preventing exposure of another customer's order) — an additional layer of defense on top of `order_service` (part 4): even if the model "leaks" a foreign order number into the reply, the Guard catches it.
 - Design, line 106: "Even if the model errs, is injected, or fabricates, it cannot cause... information exposure. In the worst case the classification is wrong, and that's caught in testing" — the Guard is the direct implementation of that sentence for free-text content (the composed reply).
+
+## Update — gap-closure round (part 13)
+
+- The checks were widened (design, section 14, lines 341–346): commitment language in Hebrew and English and in every inflection (`בוטל`/`יבוטל`, `נחזיר לך`, `מובטח`, `cancelled`, `refund`), dates in any format (DD/MM/YYYY, month names in Hebrew or English), relative deadlines (`מחר`, `tomorrow`, `within 3 days`), amounts and currency, internal codes (`POL-xx`, `agent_handoff`), and foreign order or request numbers in any spelling. The gap analysis found that 18 of 20 unsafe phrasings passed the previous guard.
+- The fallback templates exist in Hebrew and English, and each one is tested to pass the guard itself.
+- It is still a deny-list, so it is not complete (design, section 24). A legitimate sentence like "we can't promise compensation" is blocked and falls back to a template — safe, but less natural.

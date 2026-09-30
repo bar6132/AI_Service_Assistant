@@ -8,6 +8,8 @@ the exact dates verified live against the running agent in part 10.
 
 from datetime import date
 
+import pytest
+
 from src.policy_engine import decide
 
 TODAY = date(2026, 9, 22)
@@ -129,6 +131,16 @@ def test_damaged_item_always_escalates_regardless_of_state():
 def test_uncovered_intent_escalates_with_pol07():
     order = _order("delivered", "2026-09-12", "2026-09-12")
     d = decide("other", order, "unknown", TODAY)
+    assert d.action == "escalate"
+    assert d.service_request_type == "agent_handoff"
+    assert d.source_ids == ["POL-07"]
+
+
+@pytest.mark.parametrize("status", ["cancelled", "returned", "on_hold", "refunded"])
+@pytest.mark.parametrize("intent", ["order_status", "delivery_delay", "cancel", "return", "damaged_item", "other"])
+def test_status_not_covered_by_policy_always_escalates(status, intent):
+    # Was G-06: a cancelled order asked to be cancelled was told "already delivered".
+    d = decide(intent, _order(status, "2026-09-01", None), "unopened", TODAY)
     assert d.action == "escalate"
     assert d.service_request_type == "agent_handoff"
     assert d.source_ids == ["POL-07"]

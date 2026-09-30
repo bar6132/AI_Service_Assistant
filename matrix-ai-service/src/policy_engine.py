@@ -9,16 +9,21 @@ an order at all.
 
 from dataclasses import dataclass
 from datetime import date, timedelta
+from typing import Literal
 
 from src.models import Intent, PolicyId
 
 RETURN_WINDOW_DAYS = 14
 
+# The statuses the policy (POL-02..POL-05) actually talks about. Anything else
+# (cancelled, returned, on_hold, ...) is not covered -> POL-07 escalate.
+KNOWN_STATUSES = ("processing", "shipped", "delivered")
+
 
 @dataclass
 class Decision:
-    action: str  # "reply" | "clarify" | "escalate"
-    service_request_type: str | None
+    action: Literal["reply", "clarify", "escalate"]
+    service_request_type: Literal["cancellation", "return", "shipping_inquiry", "agent_handoff"] | None
     source_ids: list[PolicyId]
     reason: str
 
@@ -36,6 +41,12 @@ def _within_return_window(order: dict, today: date) -> bool:
 
 
 def decide(intent: Intent, order: dict, product_state: str, today: date) -> Decision:
+    if order["status"] not in KNOWN_STATUSES:
+        return Decision(
+            "escalate", "agent_handoff", ["POL-07"],
+            f"סטטוס הזמנה שאינו מכוסה במדיניות ({order['status']}) — מועבר לנציג, POL-07",
+        )
+
     if intent in ("order_status", "delivery_delay"):
         if _eta_passed_not_delivered(order, today):
             return Decision(
@@ -58,10 +69,11 @@ def decide(intent: Intent, order: dict, product_state: str, today: date) -> Deci
                 "reply", None, ["POL-04"],
                 "הזמנה כבר נשלחה — לא ניתן לבטל, אפשר לבחון החזרה לאחר מסירה, POL-04",
             )
-        return Decision(
-            "reply", None, ["POL-04", "POL-05"],
-            "הזמנה כבר נמסרה — ביטול לא רלוונטי, מפנה למסלול החזרה, POL-04+POL-05",
-        )
+        if order["status"] == "delivered":
+            return Decision(
+                "reply", None, ["POL-04", "POL-05"],
+                "הזמנה כבר נמסרה — ביטול לא רלוונטי, מפנה למסלול החזרה, POL-04+POL-05",
+            )
 
     if intent == "return":
         if order["delivered_at"] is None:

@@ -32,3 +32,13 @@ The three flags (`--context`, `--simulate-outage`, `--today`) and the basic usag
 ## How this satisfies the requirement
 - Assignment, line 90: "A runnable flow is required; a manual conversation with a model alone is not enough" — ✅ `run.py` is a complete end-to-end flow.
 - Assignment, line 78: "Opening a service request can happen alongside it... e.g. opening a cancellation request and sending a reply confirming the request was received" — ✅ `sr_ref` is built before `_compose_reply` and injected as a fact into the reply.
+
+## Update — gap-closure round (part 13)
+
+- **Order-id grounding** (design, section 7, line 97): after extraction, the code keeps only ids that are actually written in the customer's text or the context. Before, if the model returned a different order of the same customer, a real request was opened on the wrong order.
+- **Every escalate leaves a record** (A6, line 74): an order-service outage, all model providers failing, and malformed order data all open an `agent_handoff`. If that write also fails, the reply doesn't say "forwarded". A failed write of a normal service request now escalates without a request number (design, line 384) instead of a traceback.
+- **LLM #2 sees no policy codes:** `internal_reason` was replaced by `decision_context` without `POL-xx` (the `reason` field is staff-only, line 104). In the re-run, the case 4 reply no longer contains "(POL-04)".
+- **Retry with feedback:** when the guard rejects a draft, the second attempt receives the list of violations. At `temperature=0` an identical prompt would return an identical draft.
+- **Structured `--context`:** `return:ORD-1003` is rendered by code into a fixed sentence.
+- **Fixed replies in the customer's language** (A5): not-found, clarifying questions and failure messages — in Hebrew and English.
+- **CLI:** invalid input, an invalid date, or a wrong provider configuration return an error JSON (exit code 2) instead of a traceback. The `--today` default is `TODAY` from `.env`, and without it the current date in Asia/Jerusalem (A2, line 70).

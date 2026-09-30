@@ -18,4 +18,5 @@ matrix-ai-service/                    הקוד, הבדיקות, התיעוד ו�
 - **הוראות הפעלה מלאות** (התקנה, סביבה וירטואלית, הרצה, בדיקות): [`matrix-ai-service/README.md`](matrix-ai-service/README.md)
 - **הדגמה ויזואלית** בלי צורך להריץ כלום — פותחים ישירות בדפדפן: [`matrix-ai-service/progress/Demo/request-pipeline.html`](matrix-ai-service/progress/Demo/request-pipeline.html)
 - **תוצאות בדיקות מלאות** (10 מקרים, הורצו בפועל מול Gemini): [`matrix-ai-service/progress/10-בדיקות-ותוצאות.md`](matrix-ai-service/progress/10-בדיקות-ותוצאות.md)
+- **סגירת פערים** — ביקורת קוד חיצונית, מה שוחזר, מה תוקן ומה נשאר מגבלה ידועה: [`matrix-ai-service/progress/13-סגירת-פערים.md`](matrix-ai-service/progress/13-סגירת-פערים.md)
 - **תיעוד שלב-אחר-שלב** של כל החלטה, מצוטט מהמקור: [`matrix-ai-service/progress/`](matrix-ai-service/progress/) (עברית) · [`matrix-ai-service/progress/en/`](matrix-ai-service/progress/en/) (אנגלית)

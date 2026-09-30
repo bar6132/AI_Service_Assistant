@@ -3,3 +3,7 @@
 __pycache__/
 *.pyc
 data/service_requests.db
+data/*.db-wal
+data/*.db-shm
+data/*.db.bak
+.coverage

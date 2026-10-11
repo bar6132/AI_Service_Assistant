@@ -46,6 +46,7 @@ def main() -> None:
     parser.add_argument("--context", default=None, help='הקשר לתשובת המשך, בפורמט intent:ORD-XXXX, למשל "return:ORD-1003"')
     parser.add_argument("--simulate-outage", action="store_true", help="מדמה שירות הזמנות לא זמין")
     parser.add_argument("--today", default=_default_today(), help="YYYY-MM-DD (ברירת מחדל: TODAY מ-.env, אחרת התאריך הנוכחי)")
+    parser.add_argument("--pretty", action="store_true", help="פלט קריא בטרמינל עם סידור עברית (דורש python-bidi); לא JSON")
     parser.add_argument("-v", "--verbose", action="store_true", help="מציג לוגים (ספק, latency, guard) ל-stderr")
     args = parser.parse_args()
 
@@ -80,7 +81,33 @@ def main() -> None:
             {"field": ".".join(str(p) for p in err["loc"]), "message": err["msg"]}
             for err in exc.errors(include_input=False, include_url=False)
         ])
-    print(json.dumps(result.model_dump(), ensure_ascii=False, indent=2))
+    data = result.model_dump()
+    if args.pretty:
+        _print_pretty(data)
+    else:
+        print(json.dumps(data, ensure_ascii=False, indent=2))
+
+
+def _visual(text: str) -> str:
+    """Reorder RTL text for terminals with no bidi support (VS Code, Windows
+    Terminal). Needs `pip install python-bidi`; otherwise returns text as-is."""
+    try:
+        from bidi import get_display
+    except ImportError:
+        return text
+    return "\n".join(get_display(line) for line in text.split("\n"))
+
+
+def _print_pretty(data: dict) -> None:
+    """Human-readable output for the terminal. NOT the JSON contract."""
+    for key, value in data.items():
+        if key == "reply":
+            print(f"{key}:")
+            print(_visual(str(value)))
+        elif isinstance(value, (dict, list)):
+            print(f"{key}: {_visual(json.dumps(value, ensure_ascii=False))}")
+        else:
+            print(f"{key}: {_visual(str(value))}")
 
 
 if __name__ == "__main__":

@@ -1,6 +1,7 @@
 """Service-request store, SQLite. Source: design doc lines 130, 265, 357."""
 
 import sqlite3
+import time
 from pathlib import Path
 
 DB_PATH = Path(__file__).resolve().parent.parent / "data" / "service_requests.db"
@@ -31,10 +32,24 @@ def format_id(seq: int) -> str:
     return f"SR-{seq:06d}"
 
 
+def _enable_wal(conn: sqlite3.Connection) -> None:
+    """WAL persists in the db file, so only the very first connections need to
+    switch. That switch needs an exclusive lock and does not wait on the busy
+    timeout, so concurrent first connections must retry it."""
+    deadline = time.monotonic() + 5.0
+    while conn.execute("PRAGMA journal_mode").fetchone()[0].lower() != "wal":
+        try:
+            conn.execute("PRAGMA journal_mode=WAL")
+        except sqlite3.OperationalError:
+            if time.monotonic() > deadline:
+                raise
+            time.sleep(0.01)
+
+
 def _connect() -> sqlite3.Connection:
     conn = sqlite3.connect(DB_PATH, timeout=5.0)
-    conn.execute("PRAGMA journal_mode=WAL")
     conn.execute("PRAGMA busy_timeout=5000")
+    _enable_wal(conn)
     columns = [row[1] for row in conn.execute("PRAGMA table_info(service_requests)")]
     if columns and "seq" not in columns:
         # Pre-v2 file (text id computed as COUNT(*)+1). Keep its rows, out of the way.

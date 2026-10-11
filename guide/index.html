@@ -1,0 +1,55 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Inside the Service</title>
+<meta name="description" content="An interactive, listenable guide to how the Matrix AI customer-service backend works and why.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/style.css">
+</head>
+<body>
+<button class="menu-btn" id="menuBtn" aria-controls="sidebar" aria-expanded="false">Chapters</button>
+<div class="app">
+  <nav class="sidebar" id="sidebar" aria-label="Chapters">
+    <h1 class="brand">Inside the Service</h1>
+    <p class="brand-sub">How one customer message becomes a safe answer</p>
+    <p class="legend" aria-label="Colour key">
+      <span data-role="model"><i class="dot"></i>AI model</span>
+      <span data-role="code"><i class="dot"></i>Plain code</span>
+      <span data-role="db"><i class="dot"></i>Database</span>
+      <span data-role="guard"><i class="dot"></i>Guard</span>
+    </p>
+    <ol class="track" id="track"></ol>
+    <div class="sidebar-foot">
+      <button class="chip-btn" id="themeBtn">Light / dark</button>
+      <button class="chip-btn" id="resetBtn">Reset progress</button>
+    </div>
+  </nav>
+  <main id="main" tabindex="-1"></main>
+</div>
+
+<div class="player" id="player" role="region" aria-label="Read aloud">
+  <button class="pbtn" id="playBtn" aria-label="Read this chapter aloud">&#9654;</button>
+  <button class="sbtn" id="prevBtn" aria-label="Previous paragraph">&#9664;&#9664;</button>
+  <button class="sbtn" id="nextBtn" aria-label="Next paragraph">&#9654;&#9654;</button>
+  <div class="now">
+    <b id="nowTitle">Press play to hear this chapter</b>
+    <small id="nowSub"></small>
+    <div class="prog"><i id="progBar"></i></div>
+  </div>
+  <label class="sr-only" for="voiceSel">Voice</label>
+  <select id="voiceSel" title="Voice"></select>
+  <label class="sr-only" for="rate">Speed</label>
+  <input type="range" id="rate" min="0.7" max="1.5" step="0.05" value="1" title="Speed">
+  <label class="auto"><input type="checkbox" id="auto"> next chapter</label>
+</div>
+
+<script src="data/lessons.js"></script>
+<script src="assets/logic.js"></script>
+<script src="assets/widgets.js"></script>
+<script src="assets/app.js"></script>
+</body>
+</html>
